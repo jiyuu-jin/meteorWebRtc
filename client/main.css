@@ -1,0 +1,22 @@
+
+
+.app-title{
+    font-size: 35px;
+}
+
+
+#login{
+    padding: 10px;
+    margin: 20px auto;
+    max-width: 500px;
+    border: 1px solid gray;
+}
+
+.center-ctn{
+    margin: 0 auto;
+}
+
+.video{
+    background-color: black;
+    margin: 0 auto;
+}

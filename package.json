@@ -1,0 +1,27 @@
+{
+  "name": "webrtc",
+  "private": true,
+  "scripts": {
+    "start": "meteor run"
+  },
+  "dependencies": {
+    "babel-runtime": "6.18.0",
+    "bcrypt": "^0.8.7",
+    "mantra-core": "^1.7.0",
+    "meteor-node-stubs": "~0.2.0",
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2",
+    "react-mounter": "^1.2.0",
+    "simple-peer": "^6.4.3",
+    "webrtc-adapter": "^3.1.6"
+  },
+  "version": "1.0.0",
+  "description": "A meteor webrtc server for peer to peer streaming.",
+  "main": "index.js",
+  "keywords": [
+    "Webrtc",
+    "suhhhh"
+  ],
+  "author": "Zachary Pelkey, Edward Smapson",
+  "license": "ISC"
+}
