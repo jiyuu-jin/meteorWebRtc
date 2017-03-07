@@ -39,3 +39,8 @@
     bottom: 0px;
     background-color: #12acef;
 }
+
+#remotes video{
+    display: block;
+    margin: 5px auto;
+}

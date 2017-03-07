@@ -1,5 +1,5 @@
 import React from 'react';
-import SimpleWebRTC from '../../../configs/simplewebrtc';
+import SimpleWebRTC from '../../../configs/simplewebrtc.bundle';
 
 const Home = () =>({
     render(){
@@ -9,18 +9,20 @@ const Home = () =>({
                     <center>WebRTC Test</center>
                 </div>
                 <br/>
+                <center>
+                    <form id="createRoom">
+                        <input id="sessionInput"/>
+                        <button type="submit">Create it!</button>
+                    </form>
+                </center>
+                <br/>
                 <center><video id="localVideo" className="video"/></center>
 
-                <center><video id="remoteVideo" className="video"/></center>
-
             <center>
-                <form id="createRoom">
-                    <input id="sessionInput"/>
-                    <button type="submit">Create it!</button>
-                </form>
+                <div id="remotes">
+                </div>
             </center>
 
-                <div id="remotes"></div>
             </div>
         )
     },
@@ -35,7 +37,7 @@ const Home = () =>({
             // the id/element dom element that will hold "our" video
             localVideoEl: 'localVideo',
             // the id/element dom element that will hold remote videos
-            remoteVideosEl: 'remoteVideo',
+            remoteVideosEl: 'remotes',
             // immediately ask for camera access
             autoRequestMedia: true,
             debug: false,
@@ -53,15 +55,20 @@ const Home = () =>({
             console.log('video added', peer);
         });
 
-        $('form').submit(function () {
-            var val = $('#sessionInput').val().toLowerCase().replace(/\s/g, '-').replace(/[^A-Za-z0-9_\-]/g, '');
-            webrtc.createRoom(val, function (err, name) {
-                console.log(' create room cb', arguments);
-                var newUrl = location.pathname + '/' + name;
-                FlowRouter.go(newUrl);
+        if(room){
+            $('#createRoom').hide()
+        }else{
+            $('form').submit(function () {
+                var val = $('#sessionInput').val().toLowerCase().replace(/\s/g, '-').replace(/[^A-Za-z0-9_\-]/g, '');
+                webrtc.createRoom(val, function (err, name) {
+                    console.log(' create room cb', arguments);
+                    var newUrl = '/' + name;
+                    FlowRouter.go(newUrl);
+                    $('#createRoom').hide();
+                });
+                return false;
             });
-            return false;
-        });
+        }
 
     }
 });
