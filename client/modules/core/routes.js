@@ -19,6 +19,15 @@ export default function (injectDeps, {FlowRouter}) {
         }
     });
 
+    FlowRouter.route('/:id', {
+        name: 'peerId',
+        action() {
+            mount(MainLayoutCtx, {
+                content: () => (<Home />)
+            });
+        }
+    });
+
     FlowRouter.route('/register', {
         name: 'register',
         action() {

@@ -1,5 +1,5 @@
 import React from 'react';
-
+import SimpleWebRTC from '../../../configs/simplewebrtc';
 
 const Home = () =>({
     render(){
@@ -9,54 +9,60 @@ const Home = () =>({
                     <center>WebRTC Test</center>
                 </div>
                 <br/>
-                <center><video id="video1" className="video"/></center>
+                <center><video id="localVideo" className="video"/></center>
+
+                <center><video id="remoteVideo" className="video"/></center>
+
+            <center>
+                <form id="createRoom">
+                    <input id="sessionInput"/>
+                    <button type="submit">Create it!</button>
+                </form>
+            </center>
+
+                <div id="remotes"></div>
             </div>
         )
     },
 
     componentDidMount(){
 
-        var errorElement = document.querySelector('#errorMsg');
-        var video = document.querySelector('video');
+        var room = FlowRouter.getParam('id');
+        console.log(room);
 
-        // Put variables in global scope to make them available to the browser console.
-        var constraints = window.constraints = {
-            audio: false,
-            video: true
-        };
+        // create our webrtc connection
+        var webrtc = new SimpleWebRTC({
+            // the id/element dom element that will hold "our" video
+            localVideoEl: 'localVideo',
+            // the id/element dom element that will hold remote videos
+            remoteVideosEl: 'remoteVideo',
+            // immediately ask for camera access
+            autoRequestMedia: true,
+            debug: false,
+            detectSpeakingEvents: true
+        });
 
-        function handleSuccess(stream) {
-            var videoTracks = stream.getVideoTracks();
-            console.log('Got stream with constraints:', constraints);
-            console.log('Using video device: ' + videoTracks[0].label);
-            stream.oninactive = function() {
-                console.log('Stream inactive');
-            };
-            window.stream = stream; // make variable available to browser console
-            video.srcObject = stream;
-        }
+        // when it's ready, join if we got a room from the URL
+        webrtc.on('readyToCall', function () {
+            // you can name it anything
+            if (room) webrtc.joinRoom(room);
+        });
 
-        function handleError(error) {
-            if (error.name === 'ConstraintNotSatisfiedError') {
-                errorMsg('The resolution ' + constraints.video.width.exact + 'x' +
-                    constraints.video.width.exact + ' px is not supported by your device.');
-            } else if (error.name === 'PermissionDeniedError') {
-                errorMsg('Permissions have not been granted to use your camera and ' +
-                    'microphone, you need to allow the page access to your devices in ' +
-                    'order for the demo to work.');
-            }
-            errorMsg('getUserMedia error: ' + error.name, error);
-        }
 
-        function errorMsg(msg, error) {
-            errorElement.innerHTML += '<p>' + msg + '</p>';
-            if (typeof error !== 'undefined') {
-                console.error(error);
-            }
-        }
+        webrtc.on('videoAdded', function (video, peer) {
+            console.log('video added', peer);
+        });
 
-        navigator.mediaDevices.getUserMedia(constraints).
-        then(handleSuccess).catch(handleError);
+        $('form').submit(function () {
+            var val = $('#sessionInput').val().toLowerCase().replace(/\s/g, '-').replace(/[^A-Za-z0-9_\-]/g, '');
+            webrtc.createRoom(val, function (err, name) {
+                console.log(' create room cb', arguments);
+                var newUrl = location.pathname + '/' + name;
+                FlowRouter.go(newUrl);
+            });
+            return false;
+        });
+
     }
 });
 
