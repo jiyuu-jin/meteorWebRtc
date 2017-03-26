@@ -3,7 +3,7 @@ import React from 'react';
 import {mount} from 'react-mounter';
 
 import MainLayout from './components/main_layout';
-import Home from './components/home.jsx'
+import Home from './containers/home.js'
 import Register from './components/register.jsx'
 import Login from './components/login.jsx'
 
@@ -19,7 +19,7 @@ export default function (injectDeps, {FlowRouter}) {
         }
     });
 
-    FlowRouter.route('/:id', {
+    FlowRouter.route('/room/:id', {
         name: 'peerId',
         action() {
             mount(MainLayoutCtx, {

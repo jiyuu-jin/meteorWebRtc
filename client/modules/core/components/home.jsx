@@ -1,18 +1,28 @@
 import React from 'react';
 import SimpleWebRTC from '../../../configs/simplewebrtc.bundle';
+import { Random } from 'meteor/random';
+
 
 const Home = () =>({
+
+
+    getUser(){
+
+    },
+
+
     render(){
         return(
             <div>
                 <div className="app-title">
                     <center>WebRTC Test</center>
+                    <center><h2>Call a user!</h2></center>
                 </div>
                 <br/>
                 <center>
                     <form id="createRoom">
                         <input id="sessionInput"/>
-                        <button type="submit">Create it!</button>
+                        <button type="submit">Call</button>
                     </form>
                 </center>
                 <br/>
@@ -22,14 +32,13 @@ const Home = () =>({
                 <div id="remotes">
                 </div>
             </center>
-
             </div>
         )
     },
 
     componentDidMount(){
 
-        var room = FlowRouter.getParam('id');
+        var room = Random.id();
         console.log(room);
 
         // create our webrtc connection
@@ -50,7 +59,6 @@ const Home = () =>({
             if (room) webrtc.joinRoom(room);
         });
 
-
         webrtc.on('videoAdded', function (video, peer) {
             console.log('video added', peer);
         });
@@ -62,7 +70,7 @@ const Home = () =>({
                 var val = $('#sessionInput').val().toLowerCase().replace(/\s/g, '-').replace(/[^A-Za-z0-9_\-]/g, '');
                 webrtc.createRoom(val, function (err, name) {
                     console.log(' create room cb', arguments);
-                    var newUrl = '/' + name;
+                    var newUrl = '/room/' + name;
                     FlowRouter.go(newUrl);
                     $('#createRoom').hide();
                 });

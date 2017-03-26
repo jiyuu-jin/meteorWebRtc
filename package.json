@@ -16,6 +16,7 @@
     "mockconsole": "0.0.1",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
+    "react-komposer": "^2.0.0",
     "react-mounter": "^1.2.0",
     "rtcpeerconnection": "^7.0.1",
     "simple-peer": "^6.4.3",
