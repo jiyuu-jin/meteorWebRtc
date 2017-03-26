@@ -6,8 +6,9 @@ import { Random } from 'meteor/random';
 const Home = () =>({
 
 
-    getUser(){
-
+    callUser(){
+        Meteor.call('createRoom');
+        $('#createRoom').hide();
     },
 
 
@@ -16,7 +17,7 @@ const Home = () =>({
             <div>
                 <div className="app-title">
                     <center>WebRTC Test</center>
-                    <center><h2>Call a user!</h2></center>
+                    <center><h2>{ FlowRouter.getParam('id') || "Call a user!"}</h2></center>
                 </div>
                 <br/>
                 <center>
@@ -38,8 +39,7 @@ const Home = () =>({
 
     componentDidMount(){
 
-        var room = Random.id();
-        console.log(room);
+
 
         // create our webrtc connection
         var webrtc = new SimpleWebRTC({
@@ -63,20 +63,15 @@ const Home = () =>({
             console.log('video added', peer);
         });
 
-        if(room){
-            $('#createRoom').hide()
-        }else{
             $('form').submit(function () {
                 var val = $('#sessionInput').val().toLowerCase().replace(/\s/g, '-').replace(/[^A-Za-z0-9_\-]/g, '');
                 webrtc.createRoom(val, function (err, name) {
                     console.log(' create room cb', arguments);
                     var newUrl = '/room/' + name;
                     FlowRouter.go(newUrl);
-                    $('#createRoom').hide();
                 });
                 return false;
             });
-        }
 
     }
 });
