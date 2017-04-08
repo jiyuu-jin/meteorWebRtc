@@ -1,15 +1,21 @@
 import React from 'react';
 import SimpleWebRTC from '../../../configs/simplewebrtc.bundle';
 import { Random } from 'meteor/random';
+import Notificationlist from "../containers/notifications";
+
+
+
+
+const callUser = (roomId) =>{
+    var user = $('#sessionInput').val();
+    console.log(user);
+    Meteor.call('createRoom', user, roomId);
+    $('#createRoom').hide();
+};
+
 
 
 const Home = () =>({
-
-
-    callUser(){
-        Meteor.call('createRoom');
-        $('#createRoom').hide();
-    },
 
 
     render(){
@@ -33,13 +39,14 @@ const Home = () =>({
                 <div id="remotes">
                 </div>
             </center>
+                <Notificationlist/>
             </div>
         )
     },
 
     componentDidMount(){
 
-
+        var room = FlowRouter.getParam("id") || false;
 
         // create our webrtc connection
         var webrtc = new SimpleWebRTC({
@@ -64,13 +71,17 @@ const Home = () =>({
         });
 
             $('form').submit(function () {
-                var val = $('#sessionInput').val().toLowerCase().replace(/\s/g, '-').replace(/[^A-Za-z0-9_\-]/g, '');
+                //Old Code
+                // $('#sessionInput').val().toLowerCase().replace(/\s/g, '-').replace(/[^A-Za-z0-9_\-]/g, ''
+                var val = Random.id();
                 webrtc.createRoom(val, function (err, name) {
                     console.log(' create room cb', arguments);
                     var newUrl = '/room/' + name;
+                    callUser(val);
                     FlowRouter.go(newUrl);
                 });
-                return false;
+
+                return false
             });
 
     }

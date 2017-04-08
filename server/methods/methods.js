@@ -3,17 +3,37 @@
  */
 
 
-import {Rooms} from '/lib/collections.js';
+import {Rooms, Notifications} from '/lib/collections.js';
 
 
 Meteor.methods({
 
-    'createRoom'(sender, receiver){
+    'createRoom'(receiver, roomId){
+        console.log(receiver);
+
+        var receiverUserId = Meteor.users.findOne({username: receiver})._id;
+        var senderUserName = Meteor.users.findOne({_id: Meteor.userId()}).username;
+
+        console.log(receiverUserId);
             Rooms.insert({
-                id: Random.id(),
-                users: [sender, receiver]
-            })
+                roomId: roomId,
+                users: [Meteor.userId(), receiverUserId]
+            });
+        Meteor.call("create.notification", receiverUserId, senderUserName, roomId)
     },
+
+    'create.notification'(receiverId, senderUserName, roomId){
+        Notifications.insert({
+            userId: receiverId,
+            text: senderUserName + " is calling you.",
+            type: "request",
+            token: roomId
+        });
+    },
+
+    'remove.notification'(id){
+        Notifications.remove({_id: id});
+    }
 
 });
 

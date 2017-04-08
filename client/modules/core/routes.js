@@ -6,6 +6,7 @@ import MainLayout from './components/main_layout';
 import Home from './containers/home.js'
 import Register from './components/register.jsx'
 import Login from './components/login.jsx'
+import Chat from './components/chat';
 
 export default function (injectDeps, {FlowRouter}) {
     const MainLayoutCtx = injectDeps(MainLayout);
@@ -23,7 +24,7 @@ export default function (injectDeps, {FlowRouter}) {
         name: 'peerId',
         action() {
             mount(MainLayoutCtx, {
-                content: () => (<Home />)
+                content: () => (<Chat />)
             });
         }
     });

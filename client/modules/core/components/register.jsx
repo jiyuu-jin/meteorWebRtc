@@ -7,7 +7,8 @@ const Register = () => ({
         const email =  $("#email").val();
         const pw1 = $("#pw1").val();
         const pw2 = $("#pw2").val();
-        const user = {email:email,password:pw1};
+        const userName = $("#username").val();
+        const user = {email:email, username:userName, password:pw1};
         if(pw1 == pw2){
             Accounts.createUser(user,function(err){
                 if(!err){
@@ -27,6 +28,10 @@ const Register = () => ({
                     <div className="form-group">
                         <label for="formGroupExampleInput">Email</label>
                         <input type="text" className="form-control" id="email"/>
+                    </div>
+                    <div className="form-group">
+                        <label for="formGroupExampleInput">Username</label>
+                        <input type="text" className="form-control" id="username"/>
                     </div>
                     <div className="form-group">
                         <label for="formGroupExampleInput2">Password</label>
